@@ -24,33 +24,6 @@
 import UIKit
 import PlaygroundSupport
 
-typealias UserId = String
-
-enum Result<T> {
-    case success(T)
-    case failure(Error)
-}
-
-struct User {
-    var name: String
-    var age: Int
-}
-
-class Storage {
-    static let shared = Storage()
-    
-    func read(id: UserId, complete: @escaping (Result<User>) -> Void) {
-        let user = User(name: "Paul", age: 75)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.9) {
-            complete(.success(user))
-        }
-    }
-    
-    func update(user: User, complete: (Error?) -> Void) {
-        complete(nil)
-    }
-}
-
 class MyFormController: UIViewController {
     
     let stack = UIStackView()
@@ -60,7 +33,11 @@ class MyFormController: UIViewController {
     var user: User? {
         didSet {
             name.text = user?.name
-            age.text = "\(user?.age ?? 0)"
+            if let userAge = user?.age {
+                age.text = "\(userAge)"
+            } else {
+                age.text = ""
+            }
         }
     }
     
@@ -83,37 +60,46 @@ class MyFormController: UIViewController {
             stack.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor)
         ])
         
-        indicatorView.startAnimating()
+        name.placeholder = "Name"
+        name.borderStyle = .roundedRect
+        name.addTarget(self, action: #selector(nameDidChange), for: .editingChanged)
+        
+        age.placeholder = "Age"
+        age.borderStyle = .roundedRect
+        age.keyboardType = .numberPad
+        age.addTarget(self, action: #selector(ageDidChange), for: .editingChanged)
+        
         stack.addArrangedSubview(indicatorView)
+        stack.addArrangedSubview(name)
+        stack.addArrangedSubview(age)
+        
+        setForm(hidden: true)
         
         navigationItem.rightBarButtonItem = saveButton
         
         Storage.shared.read(id: "") {
             switch $0 {
             case .success(let user):
-                self.setForm()
+                self.setForm(hidden: false)
                 self.user = user
                 self.validateForm()
-            case .failure(_):
-                break
+            case .failure(let error):
+                self.alert(title: "Error", message: error.localizedDescription)
             }
         }
         
     }
     
-    func setForm() {
-        indicatorView.isHidden = true
-        name.placeholder = "Name"
-        name.borderStyle = .roundedRect
-        name.addTarget(self, action: #selector(nameDidChange), for: .editingChanged)
-        stack.addArrangedSubview(name)
+    func setForm(hidden: Bool) {
+        if hidden {
+            indicatorView.startAnimating()
+        } else {
+            indicatorView.stopAnimating()
+        }
         
-        
-        age.placeholder = "Age"
-        age.borderStyle = .roundedRect
-        age.keyboardType = .numberPad
-        age.addTarget(self, action: #selector(ageDidChange), for: .editingChanged)
-        stack.addArrangedSubview(age)
+        indicatorView.isHidden = !hidden
+        name.isHidden = hidden
+        age.isHidden = hidden
     }
     
     var isNameValid: Bool {
@@ -127,7 +113,6 @@ class MyFormController: UIViewController {
         
         return false
     }
-    
     
     @objc func nameDidChange(sender: UITextField) {
         alert(title: "Hey!", message: "Hello")
@@ -148,6 +133,7 @@ class MyFormController: UIViewController {
     @objc func save() {
         guard let userName = name.text, !userName.isEmpty else { return }
         guard let ageText = age.text, let userAge = Int(ageText) else { return }
+        
         let user = User(name: userName, age: userAge)
         Storage.shared.update(user: user) { error in
             if let error = error {
