@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-
+import Swift
 import UIKit
 import PlaygroundSupport
 
@@ -47,8 +47,6 @@ class MyFormController: UIViewController {
         super.viewDidLoad()
         
         saveButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(save))
-        
-        title = "User"
         
         view.backgroundColor = .white
         view.addSubview(stack)
@@ -77,7 +75,7 @@ class MyFormController: UIViewController {
         
         navigationItem.rightBarButtonItem = saveButton
         
-        Storage.shared.read(id: "") {
+        /*Storage.shared.read(id: "") {
             switch $0 {
             case .success(let user):
                 self.setForm(hidden: false)
@@ -86,7 +84,7 @@ class MyFormController: UIViewController {
             case .failure(let error):
                 self.alert(title: "Error", message: error.localizedDescription)
             }
-        }
+        }*/
         
     }
     
@@ -115,7 +113,7 @@ class MyFormController: UIViewController {
     }
     
     @objc func nameDidChange(sender: UITextField) {
-        alert(title: "Hey!", message: "Hello")
+        navigationController?.pushViewController(MyFormController(), animated: true)
         validateForm()
     }
     
@@ -135,15 +133,14 @@ class MyFormController: UIViewController {
         guard let ageText = age.text, let userAge = Int(ageText) else { return }
         
         let user = User(name: userName, age: userAge)
-        Storage.shared.update(user: user) { error in
-            if let error = error {
-                print("Error > \(error)")
-            } else {
-                print("Saved !")
-            }
-        }
     }
 }
 
-let nav = UINavigationController(rootViewController: MyFormController())
+let master = MasterViewController()
+let nav = UINavigationController(rootViewController: master)
+master.onUserSelected = { user in
+    let form = MyFormController()
+    form.title = user.name
+    nav.pushViewController(form, animated: true)
+}
 PlaygroundPage.current.liveView = nav
