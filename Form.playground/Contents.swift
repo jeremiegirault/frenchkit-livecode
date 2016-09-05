@@ -24,6 +24,13 @@
 import UIKit
 import PlaygroundSupport
 
+typealias UserId = String
+
+enum Result<T> {
+    case success(T)
+    case failure(Error)
+}
+
 struct User {
     var name: String
     var age: Int
@@ -31,6 +38,13 @@ struct User {
 
 class Storage {
     static let shared = Storage()
+    
+    func read(id: UserId, complete: @escaping (Result<User>) -> Void) {
+        let user = User(name: "Paul", age: 75)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.9) {
+            complete(.success(user))
+        }
+    }
     
     func update(user: User, complete: (Error?) -> Void) {
         complete(nil)
@@ -42,6 +56,13 @@ class MyFormController: UIViewController {
     let stack = UIStackView()
     let name = UITextField()
     let age = UITextField()
+    let indicatorView = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+    var user: User? {
+        didSet {
+            name.text = user?.name
+            age.text = "\(user?.age ?? 0)"
+        }
+    }
     
     var saveButton: UIBarButtonItem!
     
@@ -50,7 +71,7 @@ class MyFormController: UIViewController {
         
         saveButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(save))
         
-        title = "Hello"
+        title = "User"
         
         view.backgroundColor = .white
         view.addSubview(stack)
@@ -62,7 +83,26 @@ class MyFormController: UIViewController {
             stack.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor)
         ])
         
+        indicatorView.startAnimating()
+        stack.addArrangedSubview(indicatorView)
         
+        navigationItem.rightBarButtonItem = saveButton
+        
+        Storage.shared.read(id: "") {
+            switch $0 {
+            case .success(let user):
+                self.setForm()
+                self.user = user
+                self.validateForm()
+            case .failure(_):
+                break
+            }
+        }
+        
+    }
+    
+    func setForm() {
+        indicatorView.isHidden = true
         name.placeholder = "Name"
         name.borderStyle = .roundedRect
         name.addTarget(self, action: #selector(nameDidChange), for: .editingChanged)
@@ -74,10 +114,6 @@ class MyFormController: UIViewController {
         age.keyboardType = .numberPad
         age.addTarget(self, action: #selector(ageDidChange), for: .editingChanged)
         stack.addArrangedSubview(age)
-        
-        navigationItem.rightBarButtonItem = saveButton
-        
-        validateForm()
     }
     
     var isNameValid: Bool {
