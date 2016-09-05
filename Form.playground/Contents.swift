@@ -92,7 +92,9 @@ class MyFormController: UIViewController {
         return false
     }
     
+    
     @objc func nameDidChange(sender: UITextField) {
+        alert(title: "Hey!", message: "Hello")
         validateForm()
     }
     
@@ -101,7 +103,6 @@ class MyFormController: UIViewController {
     }
     
     func validateForm() {
-        
         name.backgroundColor = isNameValid ? .green : .red
         age.backgroundColor = isAgeValid ? .green : .red
         
