@@ -20,127 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import Swift
 import UIKit
 import PlaygroundSupport
-
-class MyFormController: UIViewController {
-    
-    let stack = UIStackView()
-    let name = UITextField()
-    let age = UITextField()
-    let indicatorView = UIActivityIndicatorView(activityIndicatorStyle: .gray)
-    var user: User? {
-        didSet {
-            name.text = user?.name
-            if let userAge = user?.age {
-                age.text = "\(userAge)"
-            } else {
-                age.text = ""
-            }
-        }
-    }
-    
-    var saveButton: UIBarButtonItem!
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        saveButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(save))
-        
-        view.backgroundColor = .white
-        view.addSubview(stack)
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        stack.axis = .vertical
-        NSLayoutConstraint.activate([
-            stack.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            stack.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            stack.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor)
-        ])
-        
-        name.placeholder = "Name"
-        name.borderStyle = .roundedRect
-        name.addTarget(self, action: #selector(nameDidChange), for: .editingChanged)
-        
-        age.placeholder = "Age"
-        age.borderStyle = .roundedRect
-        age.keyboardType = .numberPad
-        age.addTarget(self, action: #selector(ageDidChange), for: .editingChanged)
-        
-        stack.addArrangedSubview(indicatorView)
-        stack.addArrangedSubview(name)
-        stack.addArrangedSubview(age)
-        
-        setForm(hidden: true)
-        
-        navigationItem.rightBarButtonItem = saveButton
-        
-        /*Storage.shared.read(id: "") {
-            switch $0 {
-            case .success(let user):
-                self.setForm(hidden: false)
-                self.user = user
-                self.validateForm()
-            case .failure(let error):
-                self.alert(title: "Error", message: error.localizedDescription)
-            }
-        }*/
-        
-    }
-    
-    func setForm(hidden: Bool) {
-        if hidden {
-            indicatorView.startAnimating()
-        } else {
-            indicatorView.stopAnimating()
-        }
-        
-        indicatorView.isHidden = !hidden
-        name.isHidden = hidden
-        age.isHidden = hidden
-    }
-    
-    var isNameValid: Bool {
-        return !(name.text ?? "").isEmpty
-    }
-    
-    var isAgeValid: Bool {
-        if let text = age.text {
-            return Int(text) != nil
-        }
-        
-        return false
-    }
-    
-    @objc func nameDidChange(sender: UITextField) {
-        navigationController?.pushViewController(MyFormController(), animated: true)
-        validateForm()
-    }
-    
-    @objc func ageDidChange(sender: UITextField) {
-        validateForm()
-    }
-    
-    func validateForm() {
-        name.backgroundColor = isNameValid ? .green : .red
-        age.backgroundColor = isAgeValid ? .green : .red
-        
-        saveButton.isEnabled = (isNameValid && isAgeValid)
-    }
-    
-    @objc func save() {
-        guard let userName = name.text, !userName.isEmpty else { return }
-        guard let ageText = age.text, let userAge = Int(ageText) else { return }
-        
-        let user = User(name: userName, age: userAge)
-    }
-}
 
 let master = MasterViewController()
 let nav = UINavigationController(rootViewController: master)
 master.onUserSelected = { user in
-    let form = MyFormController()
+    let form = DetailsViewController()
     form.title = user.name
     nav.pushViewController(form, animated: true)
 }
+
 PlaygroundPage.current.liveView = nav
