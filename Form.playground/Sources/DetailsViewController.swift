@@ -25,16 +25,16 @@ import UIKit
 public final class DetailsViewController: UIViewController {
     
     let stack = UIStackView()
-    let name = UITextField()
-    let age = UITextField()
+    let nameTextField = UITextField()
+    let ageTextField = UITextField()
     let indicatorView = UIActivityIndicatorView(activityIndicatorStyle: .gray)
     var user: User? {
         didSet {
-            name.text = user?.name
+            nameTextField.text = user?.name
             if let userAge = user?.age {
-                age.text = "\(userAge)"
+                ageTextField.text = "\(userAge)"
             } else {
-                age.text = ""
+                ageTextField.text = ""
             }
         }
     }
@@ -56,18 +56,18 @@ public final class DetailsViewController: UIViewController {
             stack.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor)
             ])
         
-        name.placeholder = "Name"
-        name.borderStyle = .roundedRect
-        name.addTarget(self, action: #selector(nameDidChange), for: .editingChanged)
+        nameTextField.placeholder = "Name"
+        nameTextField.borderStyle = .roundedRect
+        nameTextField.addTarget(self, action: #selector(nameDidChange), for: .editingChanged)
         
-        age.placeholder = "Age"
-        age.borderStyle = .roundedRect
-        age.keyboardType = .numberPad
-        age.addTarget(self, action: #selector(ageDidChange), for: .editingChanged)
+        ageTextField.placeholder = "Age"
+        ageTextField.borderStyle = .roundedRect
+        ageTextField.keyboardType = .numberPad
+        ageTextField.addTarget(self, action: #selector(ageDidChange), for: .editingChanged)
         
         stack.addArrangedSubview(indicatorView)
-        stack.addArrangedSubview(name)
-        stack.addArrangedSubview(age)
+        stack.addArrangedSubview(nameTextField)
+        stack.addArrangedSubview(ageTextField)
         
         setForm(hidden: true)
         
@@ -94,16 +94,16 @@ public final class DetailsViewController: UIViewController {
         }
         
         indicatorView.isHidden = !hidden
-        name.isHidden = hidden
-        age.isHidden = hidden
+        nameTextField.isHidden = hidden
+        ageTextField.isHidden = hidden
     }
     
     var isNameValid: Bool {
-        return !(name.text ?? "").isEmpty
+        return !(nameTextField.text ?? "").isEmpty
     }
     
     var isAgeValid: Bool {
-        if let text = age.text {
+        if let text = ageTextField.text {
             return Int(text) != nil
         }
         
@@ -119,15 +119,15 @@ public final class DetailsViewController: UIViewController {
     }
     
     func validateForm() {
-        name.backgroundColor = isNameValid ? .green : .red
-        age.backgroundColor = isAgeValid ? .green : .red
+        nameTextField.backgroundColor = isNameValid ? .green : .red
+        ageTextField.backgroundColor = isAgeValid ? .green : .red
         
         saveButton.isEnabled = (isNameValid && isAgeValid)
     }
     
     @objc func save() {
-        guard let userName = name.text, !userName.isEmpty else { return }
-        guard let ageText = age.text, let userAge = Int(ageText) else { return }
+        guard let userName = nameTextField.text, !userName.isEmpty else { return }
+        guard let ageText = ageTextField.text, let userAge = Int(ageText) else { return }
         
         let user = User(name: userName, age: userAge)
     }

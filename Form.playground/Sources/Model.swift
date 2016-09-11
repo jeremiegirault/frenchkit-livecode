@@ -83,8 +83,8 @@ public class Storage {
     
     public func upsert(user: User) {
         DispatchQueue.main.asyncAfter(deadline: .now() + duration) {
-            if let exisingIndex = self.users.index(of: user) {
-                self.users[exisingIndex] = user
+            if let existingIndex = self.users.index(of: user) {
+                self.users[existingIndex] = user
             } else {
                 self.users.append(user)
             }
