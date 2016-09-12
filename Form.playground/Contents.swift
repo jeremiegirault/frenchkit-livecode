@@ -25,10 +25,5 @@ import PlaygroundSupport
 
 let master = MasterViewController()
 let nav = UINavigationController(rootViewController: master)
-master.onUserSelected = { user in
-    let form = DetailsViewController()
-    form.title = user.name
-    nav.pushViewController(form, animated: true)
-}
 
 PlaygroundPage.current.liveView = nav

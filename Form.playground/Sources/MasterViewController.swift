@@ -37,8 +37,6 @@ public final class MasterViewController: UITableViewController {
     private static let cellId = "UserCellId"
     private var users: [User] = []
     
-    public var onUserSelected: ((User) -> Void)?
-    
     public override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -86,7 +84,9 @@ public final class MasterViewController: UITableViewController {
     
     public override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let user = users[indexPath.row]
-        onUserSelected?(user)
+        let form = DetailsViewController()
+        form.title = user.name
+        navigationController?.pushViewController(form, animated: true)
     }
     
     public override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
