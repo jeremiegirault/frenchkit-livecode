@@ -46,3 +46,6 @@ extension UIViewController {
     }
 }
 
+extension Notification.Name {
+    public static let modelDidChange = NSNotification.Name("ModelDidChange")
+}

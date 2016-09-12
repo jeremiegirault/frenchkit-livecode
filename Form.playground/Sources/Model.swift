@@ -20,16 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import Foundation
-
-extension Notification.Name {
-    public static let modelDidChange = NSNotification.Name("ModelDidChange")
-}
-
-public typealias UserId = String
+import UIKit
 
 public struct User {
-    public let id: UserId
+    public let id: String
     public var name: String
     public var age: Int
     
@@ -54,8 +48,8 @@ extension User: Hashable {
     }
 }
 
-public class Storage {
-    public static let shared = Storage()
+public class UserStorage {
+    public static let shared = UserStorage()
     
     public static let usersKey = "users"
     
@@ -63,7 +57,7 @@ public class Storage {
     private var users: [User] = [ User(name: "Bob", age: 21), User(name: "Alice", age: 24) ]
     
     private func modelDidChange() {
-        NotificationCenter.default.post(name: .modelDidChange, object: self, userInfo: [ Storage.usersKey: users ])
+        NotificationCenter.default.post(name: .modelDidChange, object: self, userInfo: [ UserStorage.usersKey: users ])
     }
     
     public func list(complete: @escaping (Result<[User]>) -> Void) {

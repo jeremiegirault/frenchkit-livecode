@@ -51,7 +51,7 @@ public final class MasterViewController: UITableViewController {
         tableView.register(MyCell.self, forCellReuseIdentifier: MasterViewController.cellId)
         
         NotificationCenter.default.addObserver(forName: .modelDidChange, object: nil, queue: OperationQueue.main) { notification in
-            if let users = notification.userInfo?[Storage.usersKey] as? [User], users != self.users {
+            if let users = notification.userInfo?[UserStorage.usersKey] as? [User], users != self.users {
                 self.users = users
                 self.tableView.reloadData()
             }
@@ -59,7 +59,7 @@ public final class MasterViewController: UITableViewController {
     }
     
     func update() {
-        Storage.shared.list { result in
+        UserStorage.shared.list { result in
             switch result {
             case .success(let users):
                 self.users = users
@@ -96,7 +96,7 @@ public final class MasterViewController: UITableViewController {
             tableView.deleteRows(at: [ indexPath ], with: .automatic)
             tableView.endUpdates()
             
-            Storage.shared.delete(user: user)
+            UserStorage.shared.delete(user: user)
         }
         return [ action ]
     }
@@ -114,6 +114,6 @@ public final class MasterViewController: UITableViewController {
         tableView.insertRows(at: [ IndexPath(row: users.count-1, section: 0) ], with: .automatic)
         tableView.endUpdates()
         
-        Storage.shared.upsert(user: newUser)
+        UserStorage.shared.upsert(user: newUser)
     }
 }
