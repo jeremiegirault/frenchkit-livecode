@@ -22,65 +22,66 @@
 
 import UIKit
 
-public struct User {
+public struct Cheese {
     public let id: String
     public var name: String
-    public var age: Int
+    public var stinks: Bool
+    public var image: UIImage?
     
-    public init(name: String, age: Int) {
+    public init(name: String, stinks: Bool) {
         self.id = UUID().uuidString
         self.name = name
-        self.age = age
+        self.stinks = stinks
     }
     
-    static func byName(lhs: User, rhs: User) -> Bool {
+    static func byName(lhs: Cheese, rhs: Cheese) -> Bool {
         return lhs.name < rhs.name
     }
 }
 
-extension User: Hashable {
+extension Cheese: Hashable {
     public var hashValue: Int {
         return id.hashValue
     }
     
-    public static func ==(lhs: User, rhs: User) -> Bool {
+    public static func ==(lhs: Cheese, rhs: Cheese) -> Bool {
         return lhs.id == rhs.id
     }
 }
 
-public class UserStorage {
-    public static let shared = UserStorage()
+public class CheeseStorage {
+    public static let shared = CheeseStorage()
     
-    public static let usersKey = "users"
+    public static let cheesesKey = "cheeses"
     
     private let duration: Double = 0.6
-    private var users: [User] = [ User(name: "Bob", age: 21), User(name: "Alice", age: 24) ]
+    private var cheeses: [Cheese] = [ Cheese(name: "Emmental", stinks: false), Cheese(name: "Camembert", stinks: true) ]
     
     private func modelDidChange() {
-        NotificationCenter.default.post(name: .modelDidChange, object: self, userInfo: [ UserStorage.usersKey: users ])
+        NotificationCenter.default.post(name: .modelDidChange, object: self, userInfo: [ CheeseStorage.cheesesKey: cheeses ])
     }
     
-    public func list(complete: @escaping (Result<[User]>) -> Void) {
+    public func list(complete: @escaping (Result<[Cheese]>) -> Void) {
         DispatchQueue.main.asyncAfter(deadline: .now() + duration) {
-            complete(.success(self.users))
+            complete(.success(self.cheeses))
         }
     }
     
-    public func delete(user: User) {
+    public func delete(cheese: Cheese) {
         DispatchQueue.main.asyncAfter(deadline: .now() + duration) {
-            if let foundIndex = self.users.index(of: user) {
-                self.users.remove(at: foundIndex)
+            if let foundIndex = self.cheeses.index(of: cheese) {
+                self.cheeses.remove(at: foundIndex)
             }
             self.modelDidChange()
         }
     }
     
-    public func upsert(user: User) {
+    public func upsert(cheese: Cheese) {
         DispatchQueue.main.asyncAfter(deadline: .now() + duration) {
-            if let existingIndex = self.users.index(of: user) {
-                self.users[existingIndex] = user
+            if let existingIndex = self.cheeses.index(of: cheese) {
+                self.cheeses[existingIndex] = cheese
             } else {
-                self.users.append(user)
+                self.cheeses.append(cheese)
             }
             self.modelDidChange()
         }

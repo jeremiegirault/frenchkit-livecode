@@ -28,14 +28,10 @@ public final class DetailsViewController: UIViewController {
     let nameTextField = UITextField()
     let ageTextField = UITextField()
     let indicatorView = UIActivityIndicatorView(activityIndicatorStyle: .gray)
-    var user: User? {
+    var user: Cheese? {
         didSet {
             nameTextField.text = user?.name
-            if let userAge = user?.age {
-                ageTextField.text = "\(userAge)"
-            } else {
-                ageTextField.text = ""
-            }
+            ageTextField.text = ""
         }
     }
     
@@ -129,6 +125,6 @@ public final class DetailsViewController: UIViewController {
         guard let userName = nameTextField.text, !userName.isEmpty else { return }
         guard let ageText = ageTextField.text, let userAge = Int(ageText) else { return }
         
-        let user = User(name: userName, age: userAge)
+        let user = Cheese(name: userName, stinks: true)
     }
 }

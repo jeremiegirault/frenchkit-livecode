@@ -37,6 +37,12 @@ extension Collection {
     }
 }
 
+extension Bool {
+    public static func random() -> Bool {
+        return arc4random_uniform(2) == 0
+    }
+}
+
 extension UIViewController {
     public func alert(title: String, message: String) {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)

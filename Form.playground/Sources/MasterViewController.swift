@@ -22,47 +22,37 @@
 
 import UIKit
 
-class MyCell: UITableViewCell {
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-        super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
-}
-
 public final class MasterViewController: UITableViewController {
     
-    private static let cellId = "UserCellId"
-    private var users: [User] = []
+    private static let cellId = "CheeseCellId"
+    private var cheeses: [Cheese] = []
     
     public override func viewDidLoad() {
         super.viewDidLoad()
         
         update()
         
-        title = "User List"
+        title = "Cheeses List"
         
-        let addUserButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addUser))
+        let addCheeseButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addCheese))
         
-        navigationItem.rightBarButtonItem = addUserButton
+        navigationItem.rightBarButtonItem = addCheeseButton
         
         tableView.register(MyCell.self, forCellReuseIdentifier: MasterViewController.cellId)
         
         NotificationCenter.default.addObserver(forName: .modelDidChange, object: nil, queue: OperationQueue.main) { notification in
-            if let users = notification.userInfo?[UserStorage.usersKey] as? [User], users != self.users {
-                self.users = users
+            if let cheeses = notification.userInfo?[CheeseStorage.cheesesKey] as? [Cheese], cheeses != self.cheeses {
+                self.cheeses = cheeses
                 self.tableView.reloadData()
             }
         }
     }
     
     func update() {
-        UserStorage.shared.list { result in
+        CheeseStorage.shared.list { result in
             switch result {
-            case .success(let users):
-                self.users = users
+            case .success(let cheeses):
+                self.cheeses = cheeses
                 self.tableView.reloadData()
             case .failure(let error):
                 self.alert(title: "Error", message: error.localizedDescription)
@@ -72,48 +62,56 @@ public final class MasterViewController: UITableViewController {
     
     public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: MasterViewController.cellId, for: indexPath)
-        let user = users[indexPath.row]
-        cell.textLabel?.text = user.name
-        cell.detailTextLabel?.text = "\(user.age) y.o"
+        let cheese = cheeses[indexPath.row]
+        cell.textLabel?.text = cheese.name
+        cell.detailTextLabel?.text = cheese.stinks ? "🙊" : "🙂"
+        cell.imageView?.image = cheese.image
         return cell
     }
     
     public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return users.count
+        return cheeses.count
     }
     
     public override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let user = users[indexPath.row]
+        let cheese = cheeses[indexPath.row]
         let form = DetailsViewController()
-        form.title = user.name
+        form.title = cheese.name
         navigationController?.pushViewController(form, animated: true)
     }
     
     public override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let action = UITableViewRowAction(style: .destructive, title: "Delete") { _, indexPath in
             tableView.beginUpdates()
-            let user = self.users.remove(at: indexPath.row)
+            let cheese = self.cheeses.remove(at: indexPath.row)
             tableView.deleteRows(at: [ indexPath ], with: .automatic)
             tableView.endUpdates()
             
-            UserStorage.shared.delete(user: user)
+            CheeseStorage.shared.delete(cheese: cheese)
         }
         return [ action ]
     }
     
-    let firstNames = [ "Joe", "Jane", "Bob", "Alice", "Greg", "Emily" ]
-    let lastNames1 = [ "Apple", "Dumble", "Humble", "White", "Grey" ]
-    let lastNames2 = [ "seed", "doe", "goose", "man", "door" ]
+    let cheeseNames = [ "Brie", "Comte", "Roquefort", "Camembert", "Tomme", "Beaufort", "Livarot", "Maroilles", "Langres" ]
     
-    @objc private func addUser() {
-        let (n1, n2, n3) = (firstNames.randomElement, lastNames1.randomElement, lastNames2.randomElement)
-        let newUser = User(name: "\(n1) \(n2)\(n3)", age: (16..<99).randomElement)
+    @objc public func addCheese() {
+        let newCheese = Cheese(name: cheeseNames.randomElement, stinks: Bool.random())
         
         tableView.beginUpdates()
-        users.append(newUser)
-        tableView.insertRows(at: [ IndexPath(row: users.count-1, section: 0) ], with: .automatic)
+        cheeses.append(newCheese)
+        tableView.insertRows(at: [ IndexPath(row: cheeses.count-1, section: 0) ], with: .automatic)
         tableView.endUpdates()
         
-        UserStorage.shared.upsert(user: newUser)
+        CheeseStorage.shared.upsert(cheese: newCheese)
+    }
+}
+
+class MyCell: UITableViewCell {
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
     }
 }
