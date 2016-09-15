@@ -23,7 +23,8 @@
 import UIKit
 import PlaygroundSupport
 
-let master = MasterViewController()
-let nav = UINavigationController(rootViewController: master)
+let root = CheesesListController()
+let nav = UINavigationController(rootViewController: root)
 
 PlaygroundPage.current.liveView = nav
+

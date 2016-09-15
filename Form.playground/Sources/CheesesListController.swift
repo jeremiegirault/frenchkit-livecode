@@ -22,7 +22,7 @@
 
 import UIKit
 
-public final class MasterViewController: UITableViewController {
+public final class CheesesListController: UITableViewController {
     
     private static let cellId = "CheeseCellId"
     private var cheeses: [Cheese] = []
@@ -38,7 +38,7 @@ public final class MasterViewController: UITableViewController {
         
         navigationItem.rightBarButtonItem = addCheeseButton
         
-        tableView.register(MyCell.self, forCellReuseIdentifier: MasterViewController.cellId)
+        tableView.register(MyCell.self, forCellReuseIdentifier: CheesesListController.cellId)
         
         NotificationCenter.default.addObserver(forName: .modelDidChange, object: nil, queue: OperationQueue.main) { notification in
             if let cheeses = notification.userInfo?[CheeseStorage.cheesesKey] as? [Cheese], cheeses != self.cheeses {
@@ -61,7 +61,7 @@ public final class MasterViewController: UITableViewController {
     }
     
     public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: MasterViewController.cellId, for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: CheesesListController.cellId, for: indexPath)
         let cheese = cheeses[indexPath.row]
         cell.textLabel?.text = cheese.name
         cell.detailTextLabel?.text = cheese.stinks ? "🙊" : "🙂"
@@ -75,9 +75,9 @@ public final class MasterViewController: UITableViewController {
     
     public override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cheese = cheeses[indexPath.row]
-        let form = DetailsViewController()
-        form.title = cheese.name
-        navigationController?.pushViewController(form, animated: true)
+        let cheeseDetailsController = CheeseDetailsController(cheese: cheese)
+        cheeseDetailsController.title = cheese.name
+        navigationController?.pushViewController(cheeseDetailsController, animated: true)
     }
     
     public override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
@@ -92,7 +92,7 @@ public final class MasterViewController: UITableViewController {
         return [ action ]
     }
     
-    let cheeseNames = [ "Brie", "Comte", "Roquefort", "Camembert", "Tomme", "Beaufort", "Livarot", "Maroilles", "Langres" ]
+    let cheeseNames = [ "Brie", "Comte", "Roquefort", "Tomme", "Beaufort", "Livarot", "Maroilles", "Langres" ]
     
     @objc public func addCheese() {
         let newCheese = Cheese(name: cheeseNames.randomElement, stinks: Bool.random())
