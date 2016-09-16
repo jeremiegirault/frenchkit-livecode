@@ -29,9 +29,6 @@ public final class CheesesListController: UITableViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Cheeses List"
-        let addCheeseButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(CheesesListController.addCheese))
-        navigationItem.rightBarButtonItem = addCheeseButton
         update()
         tableView.register(MyCell.self, forCellReuseIdentifier: CheesesListController.cellId)
         NotificationCenter.default.addObserver(forName: .modelDidChange, object: nil, queue: OperationQueue.main) { notification in
@@ -40,6 +37,9 @@ public final class CheesesListController: UITableViewController {
                 self.tableView.reloadData()
             }
         }
+        title = "Cheeses List"
+        let addCheeseButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(CheesesListController.addCheese))
+        navigationItem.rightBarButtonItem = addCheeseButton
     }
     
     func update() {
