@@ -28,10 +28,11 @@ public struct Cheese {
     public var stinks: Bool
     public var image: UIImage?
     
-    public init(name: String, stinks: Bool) {
+    public init(name: String, stinks: Bool, image: UIImage? = nil) {
         self.id = UUID().uuidString
         self.name = name
         self.stinks = stinks
+        self.image = image
     }
     
     static func byName(lhs: Cheese, rhs: Cheese) -> Bool {

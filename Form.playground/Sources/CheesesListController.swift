@@ -29,17 +29,11 @@ public final class CheesesListController: UITableViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        
-        update()
-        
         title = "Cheeses List"
-        
-        let addCheeseButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addCheese))
-        
+        let addCheeseButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(CheesesListController.addCheese))
         navigationItem.rightBarButtonItem = addCheeseButton
-        
+        update()
         tableView.register(MyCell.self, forCellReuseIdentifier: CheesesListController.cellId)
-        
         NotificationCenter.default.addObserver(forName: .modelDidChange, object: nil, queue: OperationQueue.main) { notification in
             if let cheeses = notification.userInfo?[CheeseStorage.cheesesKey] as? [Cheese], cheeses != self.cheeses {
                 self.cheeses = cheeses
