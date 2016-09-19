@@ -36,7 +36,7 @@ public final class CheesesListController: UITableViewController {
         cell.textLabel?.text = cheese.name
         let stinks = cheese.stinks ? "🙊" : "🙂"
         cell.detailTextLabel?.text = "stinks: \(stinks)"
-        cell.imageView?.image = cheese.image
+        cell.imageView?.image = cheese.image.flatMap(UIImage.init)
         return cell
     }
     

@@ -10,7 +10,7 @@ public struct Cheese {
         self.id = UUID().uuidString
         self.name = name
         self.stinks = stinks
-        self.image = imageName.cheeseImage
+        self.image = imageName.cheeseImageData
     }
 }
 
