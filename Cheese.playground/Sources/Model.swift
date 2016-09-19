@@ -1,12 +1,12 @@
-import UIKit
+import Foundation
 
 public struct Cheese {
     public let id: String
     public var name: String
     public var stinks: Bool
-    public var image: UIImage?
+    public var image: Data?
     
-    public init(name: String, stinks: Bool, image: UIImage? = nil) {
+    public init(name: String, stinks: Bool, image: Data? = nil) {
         self.id = UUID().uuidString
         self.name = name
         self.stinks = stinks
