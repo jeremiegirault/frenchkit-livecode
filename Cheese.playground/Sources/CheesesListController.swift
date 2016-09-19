@@ -4,6 +4,7 @@ public final class CheesesListController: UITableViewController {
     
     private static let cellId = "CheeseCellId"
     private var cheeses: [Cheese] = []
+    public var cheeseTouched: ((Cheese) -> Void)?
     
     public override func viewDidLoad() {
         super.viewDidLoad()
@@ -15,9 +16,6 @@ public final class CheesesListController: UITableViewController {
                 self.tableView.reloadData()
             }
         }
-        title = "Cheeses List"
-        let addCheeseButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(CheesesListController.addCheese))
-        navigationItem.rightBarButtonItem = addCheeseButton
     }
     
     func update() {
@@ -47,9 +45,7 @@ public final class CheesesListController: UITableViewController {
     
     public override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cheese = cheeses[indexPath.row]
-        let cheeseDetailsController = CheeseDetailsController(cheese: cheese)
-        cheeseDetailsController.title = cheese.name
-        navigationController?.pushViewController(cheeseDetailsController, animated: true)
+        cheeseTouched?(cheese)
     }
     
     public override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
