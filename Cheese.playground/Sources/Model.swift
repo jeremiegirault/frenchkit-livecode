@@ -6,15 +6,11 @@ public struct Cheese {
     public var stinks: Bool
     public var image: Data?
     
-    public init(name: String, stinks: Bool, image: Data? = nil) {
+    public init(name: String, stinks: Bool, imageName: String) {
         self.id = UUID().uuidString
         self.name = name
         self.stinks = stinks
-        self.image = image
-    }
-    
-    static func byName(lhs: Cheese, rhs: Cheese) -> Bool {
-        return lhs.name < rhs.name
+        self.image = imageName.cheeseImage
     }
 }
 

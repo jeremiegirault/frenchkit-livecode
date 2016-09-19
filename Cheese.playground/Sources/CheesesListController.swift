@@ -34,7 +34,8 @@ public final class CheesesListController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: CheesesListController.cellId, for: indexPath)
         let cheese = cheeses[indexPath.row]
         cell.textLabel?.text = cheese.name
-        cell.detailTextLabel?.text = cheese.stinks ? "🙊" : "🙂"
+        let stinks = cheese.stinks ? "🙊" : "🙂"
+        cell.detailTextLabel?.text = "stinks: \(stinks)"
         cell.imageView?.image = cheese.image
         return cell
     }
@@ -63,6 +64,13 @@ public final class CheesesListController: UITableViewController {
     let cheeseNames = [ "Brie", "Comte", "Roquefort", "Tomme", "Beaufort", "Livarot", "Maroilles", "Langres" ]
     
     @objc public func addCheese() {
+        setLoading(true, animated: true)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+            self.setLoading(false, animated: true)
+        }
+        
+        /*
         let newCheese = Cheese(name: cheeseNames.randomElement, stinks: Bool.random())
         
         tableView.beginUpdates()
@@ -70,13 +78,13 @@ public final class CheesesListController: UITableViewController {
         tableView.insertRows(at: [ IndexPath(row: cheeses.count-1, section: 0) ], with: .automatic)
         tableView.endUpdates()
         
-        CheeseStorage.shared.upsert(cheese: newCheese)
+        CheeseStorage.shared.upsert(cheese: newCheese)*/
     }
 }
 
 class MyCell: UITableViewCell {
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-        super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
+        super.init(style: .value1, reuseIdentifier: reuseIdentifier)
     }
     
     required init?(coder aDecoder: NSCoder) {

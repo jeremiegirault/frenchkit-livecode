@@ -6,7 +6,23 @@ public class CheeseStorage {
     public static let cheesesKey = "cheeses"
     
     private let duration: Double = 0.6
-    private var cheeses: [Cheese] = [ Cheese(name: "Emmental", stinks: false), Cheese(name: "Camembert", stinks: true) ]
+    private var cheeses: [Cheese] = [
+        Cheese(name: "Abondance", stinks: false, imageName: "abondance"),
+        Cheese(name: "Emmental", stinks: true, imageName: "allgauer-emmentaler"),
+        Cheese(name: "Banon", stinks: true, imageName: "banon"),
+        Cheese(name: "Bleu d'Auvergne", stinks: true, imageName: "bleu-dauvergne"),
+        Cheese(name: "Bleu de Gex", stinks: true, imageName: "bleu-de-gex"),
+        Cheese(name: "Brie de Meaux", stinks: true, imageName: "brie-de-meaux"),
+        Cheese(name: "Brie", stinks: true, imageName: "brie"),
+        Cheese(name: "Brillat Savarin", stinks: true, imageName: "brillat-savarin"),
+        Cheese(name: "Brocciu", stinks: true, imageName: "brocciu"),
+        Cheese(name: "Bucheron", stinks: true, imageName: "bucheron"),
+        Cheese(name: "Cabrales", stinks: true, imageName: "cabrales"),
+        Cheese(name: "Camembert", stinks: true, imageName: "camembert"),
+        Cheese(name: "Cantal", stinks: true, imageName: "cantal"),
+        Cheese(name: "Chabichou du Poitou", stinks: true, imageName: "chabichou-du-poitou"),
+        Cheese(name: "Chaource", stinks: true, imageName: "chaource"),
+    ]
     
     private func modelDidChange() {
         NotificationCenter.default.post(name: .modelDidChange, object: self, userInfo: [ CheeseStorage.cheesesKey: cheeses ])

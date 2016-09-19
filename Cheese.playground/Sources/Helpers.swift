@@ -20,12 +20,36 @@ extension Bool {
     }
 }
 
-extension UIViewController {
-    public func alert(title: String, message: String) {
+extension String {
+    var cheeseImage: UIImage? {
+        return UIImage(imageLiteralResourceName: "\(self).jpg")
+    }
+    
+    var cheeseImageData: Data? {
+        let url = Bundle.main.url(forResource: self, withExtension: "jpg")
+        return url.flatMap { try? Data(contentsOf: $0) }
+    }
+}
+
+private var loadingKey: UInt8 = 0
+
+public extension UIViewController {
+    func alert(title: String, message: String) {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         let closeAction = UIAlertAction(title: "OK", style: .default)
         alertController.addAction(closeAction)
         present(alertController, animated: true)
+    }
+    
+    func setLoading(_ loading: Bool, animated: Bool) {
+        if loading && presentedViewController == nil {
+            let loading = LoaderViewController()
+            loading.modalPresentationStyle = .overFullScreen
+            loading.modalTransitionStyle = .crossDissolve
+            present(loading, animated: animated)
+        } else if !loading && presentedViewController != nil {
+            dismiss(animated: animated)
+        }
     }
 }
 
