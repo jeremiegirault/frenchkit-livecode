@@ -12,7 +12,8 @@ class LoaderViewController: UIViewController {
         let messages = [
             "Contacting the internets",
             "Waiting for cheese to melt",
-            "Stinking sequence initialized" ]
+            "Stinking module initialized",
+            "Melting sequence engaged" ]
         
         return Timer(timeInterval: 1.5, repeats: true) { [weak self] _ in
             self?.label.text = messages.randomElement
