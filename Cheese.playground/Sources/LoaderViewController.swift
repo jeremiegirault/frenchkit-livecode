@@ -13,6 +13,8 @@ class LoaderViewController: UIViewController {
             "Contacting the internets",
             "Waiting for cheese to melt",
             "Stinking module initialized",
+            "Odoring Hodors",
+            "Fermentation in progress",
             "Melting sequence engaged" ]
         
         return Timer(timeInterval: 1.5, repeats: true) { [weak self] _ in

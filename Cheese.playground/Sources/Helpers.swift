@@ -31,8 +31,6 @@ extension String {
     }
 }
 
-private var loadingKey: UInt8 = 0
-
 public extension UIViewController {
     func alert(title: String, message: String) {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -51,8 +49,4 @@ public extension UIViewController {
             dismiss(animated: animated)
         }
     }
-}
-
-extension Notification.Name {
-    public static let modelDidChange = NSNotification.Name("ModelDidChange")
 }
