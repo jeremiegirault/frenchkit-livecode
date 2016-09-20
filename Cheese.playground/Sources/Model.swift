@@ -1,13 +1,12 @@
 import Foundation
 
 public struct Cheese {
-    public let id: String
+    public let id = UUID()
     public var name: String
     public var stinks: Bool
     public var image: Data?
     
     public init(name: String, stinks: Bool, imageName: String) {
-        self.id = UUID().uuidString
         self.name = name
         self.stinks = stinks
         self.image = imageName.cheeseImageData

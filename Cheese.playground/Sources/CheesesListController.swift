@@ -8,8 +8,11 @@ public final class CheesesListController: UITableViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        update()
+        
         tableView.register(MyCell.self, forCellReuseIdentifier: CheesesListController.cellId)
+        
+        update()
+        
         NotificationCenter.default.addObserver(forName: .modelDidChange, object: nil, queue: OperationQueue.main) { notification in
             if let cheeses = notification.userInfo?[CheeseStorage.cheesesKey] as? [Cheese], cheeses != self.cheeses {
                 self.cheeses = cheeses

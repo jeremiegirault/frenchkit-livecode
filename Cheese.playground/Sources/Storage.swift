@@ -14,6 +14,9 @@ public class CheeseStorage {
         Cheese(name: "Bleu de Gex", stinks: true, imageName: "bleu-de-gex"),
         Cheese(name: "Brie de Meaux", stinks: true, imageName: "brie-de-meaux"),
         Cheese(name: "Brie", stinks: true, imageName: "brie"),
+    ]
+    
+    public var availableCheeses: [Cheese] = [
         Cheese(name: "Brillat Savarin", stinks: true, imageName: "brillat-savarin"),
         Cheese(name: "Brocciu", stinks: true, imageName: "brocciu"),
         Cheese(name: "Bucheron", stinks: true, imageName: "bucheron"),
