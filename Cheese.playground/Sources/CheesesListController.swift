@@ -1,22 +1,11 @@
 import UIKit
 
-private var remainingCheeses: [Cheese] = [
-    Cheese(name: "Brillat Savarin", stinks: true, imageName: "brillat-savarin"),
-    Cheese(name: "Brocciu", stinks: false, imageName: "brocciu"),
-    Cheese(name: "Bucheron", stinks: true, imageName: "bucheron"),
-    Cheese(name: "Cabrales", stinks: false, imageName: "cabrales"),
-    Cheese(name: "Camembert", stinks: true, imageName: "camembert"),
-    Cheese(name: "Cantal", stinks: false, imageName: "cantal"),
-    Cheese(name: "Chabichou du Poitou", stinks: true, imageName: "chabichou-du-poitou"),
-    Cheese(name: "Chaource", stinks: true, imageName: "chaource"),
-    Cheese(name: "Emmental", stinks: false, imageName: "allgauer-emmentaler")
-]
-
 public final class CheesesListController: UITableViewController {
     
-    private var data: [Cheese] { return CheeseStorage.shared.list }
-    
+    private let storage = OptimisticModel.shared
     public var cheeseTouched: ((Cheese) -> Void)?
+    
+    // uiviewcontroller
     
     public override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,9 +13,11 @@ public final class CheesesListController: UITableViewController {
         tableView.register(CheeseCell.self, forCellReuseIdentifier: CheeseCell.identifier)
     }
     
+    // table view datasource/delegate
+    
     public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: CheeseCell.identifier, for: indexPath)
-        let cheese = data[indexPath.row]
+        let cheese = storage.list[indexPath.row]
         
         cell.textLabel?.text = cheese.name
         let stinks = cheese.stinks ? "🙊" : "🙂"
@@ -37,27 +28,29 @@ public final class CheesesListController: UITableViewController {
     }
     
     public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return data.count
+        return storage.list.count
     }
     
     public override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let cheese = data[indexPath.row]
+        let cheese = storage.list[indexPath.row]
         cheeseTouched?(cheese)
     }
     
     public override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let action = UITableViewRowAction(style: .destructive, title: "Delete") { [weak self] _, indexPath in
             
-            guard let cheese = self?.data[indexPath.row] else { return }
+            guard let cheese = self?.storage.list[indexPath.row] else { return }
             self?.removeCheese(cheese: cheese)
         }
         return [ action ]
     }
     
+    // operations
+    
     func removeCheese(cheese: Cheese) {
         longOperation { complete in
             remainingCheeses.append(cheese)
-            CheeseStorage.shared.remove(cheese: cheese, complete: complete)
+            storage.remove(cheese: cheese, complete: complete)
         }
     }
     
@@ -66,9 +59,11 @@ public final class CheesesListController: UITableViewController {
         
         longOperation { complete in
             let cheese = remainingCheeses.removeFirst()
-            CheeseStorage.shared.upsert(cheese: cheese, complete: complete)
+            storage.upsert(cheese: cheese, complete: complete)
         }
     }
+    
+    // helper
     
     func longOperation(_ start: (@escaping (Error?) -> Void) -> Void) {
         setLoading(true, animated: true)
@@ -83,6 +78,14 @@ public final class CheesesListController: UITableViewController {
         }
     }
 }
+
+
+
+
+
+
+
+/// Cheese TableView Cell
 
 final class CheeseCell: UITableViewCell {
     

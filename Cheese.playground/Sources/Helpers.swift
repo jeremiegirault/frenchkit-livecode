@@ -50,3 +50,15 @@ public extension UIViewController {
         }
     }
 }
+
+var remainingCheeses: [Cheese] = [
+    Cheese(name: "Brillat Savarin", stinks: true, imageName: "brillat-savarin"),
+    Cheese(name: "Brocciu", stinks: false, imageName: "brocciu"),
+    Cheese(name: "Bucheron", stinks: true, imageName: "bucheron"),
+    Cheese(name: "Cabrales", stinks: false, imageName: "cabrales"),
+    Cheese(name: "Camembert", stinks: true, imageName: "camembert"),
+    Cheese(name: "Cantal", stinks: false, imageName: "cantal"),
+    Cheese(name: "Chabichou du Poitou", stinks: true, imageName: "chabichou-du-poitou"),
+    Cheese(name: "Chaource", stinks: true, imageName: "chaource"),
+    Cheese(name: "Emmental", stinks: false, imageName: "allgauer-emmentaler")
+]
