@@ -20,6 +20,14 @@ extension Bool {
     }
 }
 
+extension Array where Element: AnyObject {
+    mutating func remove(reference: Element) {
+        if let index = index(where: { $0 === reference }) {
+            remove(at: index)
+        }
+    }
+}
+
 extension String {
     var cheeseImage: UIImage? {
         return UIImage(imageLiteralResourceName: "\(self).jpg")
