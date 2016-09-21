@@ -3,7 +3,6 @@ import UIKit
 public final class CheesesListController: UITableViewController {
     
     private let storage = OptimisticModel.shared
-    public var cheeseTouched: ((Cheese) -> Void)?
     
     // uiviewcontroller
     
@@ -11,6 +10,10 @@ public final class CheesesListController: UITableViewController {
         super.viewDidLoad()
         
         tableView.register(CheeseCell.self, forCellReuseIdentifier: CheeseCell.identifier)
+        
+        title = "Cheeses List"
+        let addCheeseButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(CheesesListController.addCheese))
+        navigationItem.rightBarButtonItem = addCheeseButton
     }
     
     // table view datasource/delegate
@@ -22,7 +25,7 @@ public final class CheesesListController: UITableViewController {
         cell.textLabel?.text = cheese.name
         let stinks = cheese.stinks ? "🙊" : "🙂"
         cell.detailTextLabel?.text = "stinks: \(stinks)"
-        cell.imageView?.image = cheese.image.flatMap(UIImage.init)
+        cell.imageView?.image = cheese.image
         
         return cell
     }
@@ -33,7 +36,9 @@ public final class CheesesListController: UITableViewController {
     
     public override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cheese = storage.list[indexPath.row]
-        cheeseTouched?(cheese)
+        let cheeseDetailsController = CheeseDetailsController(cheese: cheese)
+        cheeseDetailsController.title = cheese.name
+        navigationController?.pushViewController(cheeseDetailsController, animated: true)
     }
     
     public override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {

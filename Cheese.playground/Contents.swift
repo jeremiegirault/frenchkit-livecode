@@ -1,4 +1,7 @@
 import UIKit
 import PlaygroundSupport
 
-PlaygroundPage.current.liveView = Router().rootViewController
+let root = CheesesListController()
+let navigationController = UINavigationController(rootViewController: root)
+
+PlaygroundPage.current.liveView = navigationController
