@@ -2,7 +2,7 @@ import UIKit
 
 public final class CheesesListController: UITableViewController {
     
-    private let storage = OptimisticModel.shared
+    private let storage = CheeseStorage.shared
     public var cheeseTouched: ((Cheese) -> Void)?
     
     // uiviewcontroller
@@ -48,7 +48,7 @@ public final class CheesesListController: UITableViewController {
     // operations
     
     func removeCheese(cheese: Cheese) {
-        optimisticOperation { complete in
+        longOperation { complete in
             remainingCheeses.append(cheese)
             storage.remove(cheese: cheese, complete: complete)
         }
@@ -57,7 +57,7 @@ public final class CheesesListController: UITableViewController {
     @objc public func addCheese() {
         guard !remainingCheeses.isEmpty else { return }
         
-        optimisticOperation { complete in
+        longOperation { complete in
             let cheese = remainingCheeses.removeFirst()
             storage.upsert(cheese: cheese, complete: complete)
         }
@@ -76,23 +76,6 @@ public final class CheesesListController: UITableViewController {
                 self.alert(title: "Error", message: error.localizedDescription)
             }
         }
-    }
-    
-    func optimisticOperation(_ start: (@escaping (Error?, OptimisticUpdate) -> Void) -> Void) {
-        start { [weak self] error, update in
-            if let error = error {
-                let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in
-                    update.rollback()
-                    self?.tableView.reloadData()
-                })
-                alert.addAction(UIAlertAction(title: "Retry", style: .`default`) { _ in
-                    update.execute()
-                })
-                self?.present(alert, animated: true)
-            }
-        }
-        tableView.reloadData()
     }
 }
 

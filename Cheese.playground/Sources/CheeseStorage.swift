@@ -4,7 +4,7 @@ final class CheeseStorage {
     static let shared = CheeseStorage()
     
     private let delay: Double = 2.0
-    private let probabilityOfError: Double = 0.9
+    private let probabilityOfError: Double = 0.4
     
     private var availableCheeses: [Cheese] = [
         Cheese(name: "Abondance", stinks: false, imageName: "abondance"),
