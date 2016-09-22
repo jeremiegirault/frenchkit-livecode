@@ -26,7 +26,7 @@ extension Cheese: Hashable {
 final class CheeseStorage {
     static let shared = CheeseStorage()
     
-    private let delay: Double = 2.0
+    private let delay: Double = 0.0
     private let probabilityOfError: Double = 0.0
     
     private var availableCheeses: [Cheese] = [

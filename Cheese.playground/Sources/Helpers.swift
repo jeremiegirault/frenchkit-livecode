@@ -31,6 +31,14 @@ extension String {
     }
 }
 
+extension Array where Element: AnyObject {
+    mutating func remove(reference: Element) {
+        if let index = index(where: { $0 === reference }) {
+            remove(at: index)
+        }
+    }
+}
+
 public extension UIViewController {
     func alert(title: String, message: String) {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)

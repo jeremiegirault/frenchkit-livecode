@@ -2,7 +2,7 @@ import UIKit
 
 public final class CheesesListController: UITableViewController {
     
-    private let storage = OptimisticModel.shared
+    private let storage = CheeseStorage.shared
     
     // uiviewcontroller
     
