@@ -2,7 +2,7 @@ import UIKit
 
 public final class CheesesListController: UITableViewController {
     
-    private let storage = CheeseStorage.shared
+    private let storage = OptimisticStorage.shared
     public var cheeseTouched: ((Cheese) -> Void)?
     
     // uiviewcontroller
@@ -48,7 +48,7 @@ public final class CheesesListController: UITableViewController {
     // operations
     
     func removeCheese(cheese: Cheese) {
-        longOperation { complete in
+        optimisticOperation { complete in
             remainingCheeses.append(cheese)
             storage.remove(cheese: cheese, complete: complete)
         }
@@ -57,7 +57,7 @@ public final class CheesesListController: UITableViewController {
     @objc public func addCheese() {
         guard !remainingCheeses.isEmpty else { return }
         
-        longOperation { complete in
+        optimisticOperation { complete in
             let cheese = remainingCheeses.removeFirst()
             storage.upsert(cheese: cheese, complete: complete)
         }
@@ -76,6 +76,17 @@ public final class CheesesListController: UITableViewController {
                 self.alert(title: "Error", message: error.localizedDescription)
             }
         }
+    }
+    
+    func optimisticOperation(_ start: (@escaping (Error?) -> Void) -> Void) {
+        start { error in
+            if let error = error {
+                self.alert(title: "Error", message: error.localizedDescription)
+            }
+        }
+        
+        navigationItem.rightBarButtonItem?.isEnabled = !remainingCheeses.isEmpty
+        tableView.reloadData()
     }
 }
 

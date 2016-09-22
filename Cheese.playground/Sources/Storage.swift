@@ -3,8 +3,8 @@ import Foundation
 final class CheeseStorage {
     static let shared = CheeseStorage()
     
-    private let delay: Double = 0.0
-    private let probabilityOfError: Double = 0.0
+    private let delay: Double = 2.0
+    private let probabilityOfError: Double = 0.7
     
     private var availableCheeses: [Cheese] = [
         Cheese(name: "Abondance", stinks: false, imageName: "abondance"),
