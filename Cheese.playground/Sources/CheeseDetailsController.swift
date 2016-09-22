@@ -38,7 +38,7 @@ public final class CheeseDetailsController: UIViewController {
         imageView.layer.shadowOpacity = 0.4
         imageView.layer.shadowOffset = .zero
         
-        imageView.image = cheese.image
+        imageView.image = cheese.image.flatMap(UIImage.init)
         nameLabel.text = cheese.name
         nameLabel.font = UIFont.boldSystemFont(ofSize: 18)
         
